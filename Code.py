@@ -33,7 +33,7 @@ def inverse(_e, _phi):
 
         
     
-def getPrimeNumbers(m = 10000 ,n = 100000):      
+def getPrimeNumbers(m = 1000 ,n = 1000):      
     # Create a boolean array "prime[0..n]" and
     # initialize all entries it as true. A value
     # in prime[i] will finally be false if i is
@@ -59,10 +59,13 @@ def getPrimeNumbers(m = 10000 ,n = 100000):
 
 primeNumbers = getPrimeNumbers(150, 1000)    
 
+def getRandomPrime():
+    return primeNumbers[random.randint(0, len(primeNumbers))]
+
 #print(primeNumbers)    
 #Random prime numbers
-p = primeNumbers[random.randint(0, len(primeNumbers))]
-q = primeNumbers[random.randint(0, len(primeNumbers))]
+p = getRandomPrime()
+q = getRandomPrime()
 
 #Public Key
 n = p * q
