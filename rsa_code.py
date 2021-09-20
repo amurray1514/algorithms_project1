@@ -98,6 +98,8 @@ def integrationTest():
     (n, e, d) = getRSAKeys()
     print("RSA keys generated.")
     enc_messages = []
+    signed_messages = []
+    signatures = []
     choice = 0
     # Display user interface
     while not choice == 3:
@@ -120,7 +122,24 @@ def integrationTest():
                 print("Message encrypted and sent.")
             # 2. Authenticate a signature
             elif choice == 2:
-                print("Function not yet supported.")
+                if len(signed_messages) == 0:
+                    print("There are no messages available.")
+                else:
+                    print("The following messages are available:")
+                    for i in range(len(signed_messages)):
+                        print(i + 1, ". ",
+                              signed_messages[i], sep = '')
+                    choice = int(input("Enter your choice: "))
+                    if choice < 1 or choice > len(signed_messages):
+                        print("Out of range, try again.")
+                    else:
+                        if checkDigitalSignature(
+                                signed_messages[choice - 1],
+                                signatures[choice - 1], e, n):
+                            print("Signature is valid.")
+                        else:
+                            print("Signature is invalid.")
+                    choice = 0
             # Return to loop if not logged out
             if not choice == 3:
                 choice = 1
@@ -151,7 +170,10 @@ def integrationTest():
                     choice = 0
             # 2. Sign a message
             elif choice == 2:
-                print("Function not yet supported.")
+                msg = input("Enter a message: ")
+                signed_messages.append(msg)
+                signatures.append(getDigitalSignature(msg, d, n))
+                print("Message signed and sent.")
             # Return to loop if not logged out
             if not choice == 3:
                 choice = 2
@@ -170,5 +192,11 @@ if __name__ == '__main__':
     message = decrypt(enc_arr, d, n)
     mess_arr = [ord(c) for c in message]
     print("Decrypted message:", message, "=", mess_arr)
+    sig_arr = getDigitalSignature(message, d, n)
+    print("Signed message:", sig_arr)
+    if checkDigitalSignature(message, sig_arr, e, n):
+        print("Signature is valid.")
+    else:
+        print("Signature is invalid.")
     print("--- Integeration test ---")
     integrationTest()
