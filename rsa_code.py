@@ -15,19 +15,10 @@ MAX_PRIME_GEN = 1 << 64 - 1
 FERMAT_TESTS = 32
 
 def encrypt(mess, _e, _n):
-    m2 = []
-    for b in mess:
-        _b = ord(b)
-        m2.append(pow(_b, _e, _n))
-    return m2
+    return [pow(ord(m), _e, _n) for m in mess]
 
 def decrypt(mess, _d, _n):
-    m2 = []    
-    for m in mess:
-        _m = chr(pow(m, _d, _n))
-        #print(_m,m)
-        m2.append(_m)
-    return ''.join(m2)
+    return "".join([chr(pow(m, _d, _n)) for m in mess])
 
 def relativePrime(num):
     while True:
@@ -58,18 +49,27 @@ def getRandomPrime(m = MIN_PRIME_GEN, n = MAX_PRIME_GEN):
                 break
     return num
 
-def getRSAKeys():
+def getRSAKeys(unitTest = False):
     # Random prime numbers
-    p = getRandomPrime()
-    q = getRandomPrime()
+    p, q = 0, 0
+    if unitTest:
+        p = getRandomPrime(17, 63)
+        print("p =", p)
+        q = getRandomPrime(17, 63)
+        print("q =", q)
+    else:
+        p = getRandomPrime()
+        q = getRandomPrime()
     # Public Key
     n = p * q
+    if unitTest: print("n =", n)
     phi = (p - 1) * (q - 1)
+    if unitTest: print("phi =", phi)
     e = relativePrime(phi)
+    if unitTest: print("e =", e)
     # Private Key
     d = inverse(e, phi)
-    #print(d)
-    #print(relativePrime(phi))
+    if unitTest: print("d =", d)
     return (n, e, d)
 
 """
@@ -145,4 +145,15 @@ def integrationTest():
 
 # Run integration test
 if __name__ == '__main__':
+    print("--- Unit test ---")
+    (n, e, d) = getRSAKeys(True)
+    message = "Hello"
+    mess_arr = [ord(c) for c in message]
+    print("Original message:", message, "=", mess_arr)
+    enc_arr = encrypt(message, e, n)
+    print("Encrypted message:", enc_arr)
+    message = decrypt(enc_arr, d, n)
+    mess_arr = [ord(c) for c in message]
+    print("Decrypted message:", message, "=", mess_arr)
+    print("--- Integeration test ---")
     integrationTest()
