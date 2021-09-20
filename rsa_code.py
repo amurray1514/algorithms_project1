@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 This is the code implementing RSA.
-
 @author: Josh Hicks
 """
 
@@ -58,6 +57,26 @@ def getRandomPrime(m = MIN_PRIME_GEN, n = MAX_PRIME_GEN):
                 break
     return num
 
+def getDigitalSignature(mess, _d, _n):
+    m2 = []
+    for b in mess:
+        _b = ord(b)
+        m2.append(pow(_b, _d, _n))
+    return m2
+
+def checkDigitalSignature(mess, sig, _e, _n):
+    if len(mess) != len(sig):
+        return False
+    
+    for i in range(len(mess)):
+        _m = ord(mess[i])
+        _s = sig[i]
+        if pow(_s, _e, _n) != _m:
+            return False
+    return True
+        
+    
+
 def getRSAKeys():
     # Random prime numbers
     p = getRandomPrime()
@@ -74,10 +93,10 @@ def getRSAKeys():
 
 """
 Integration test for RSA code above.
-
 @author: Archer Murray
 """
 def integrationTest():
+    
     # Generate RSA keys
     print("Generating RSA keys, please wait...")
     (n, e, d) = getRSAKeys()
