@@ -9,8 +9,8 @@ from math import gcd
 import random
 
 # Constants for getRandomPrime()
-MIN_PRIME_GEN = 1 << 16 + 1
-MAX_PRIME_GEN = 1 << 64 - 1
+MIN_PRIME_GEN = 1 << 64 + 1
+MAX_PRIME_GEN = 1 << 256 - 1
 FERMAT_TESTS = 32
 
 def encrypt(mess, _e, _n):
